@@ -60,17 +60,21 @@ public class GamlAdditions extends AbstractGamlAdditions {
 	initializeAction();
 	initializeSkill();
 }public void initializeVars()  {
+_var(ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill.class,desc(10,S("type","10","name","modification_list","init","[]")),null,null,null);
+_var(ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill.class,desc(10,S("type","10","name","evaluation_list","init","[]")),null,null,null);
 _var(ummisco.gama.spatialmodelcoupling.model.ModelSkill.class,desc(2,S("type","2","name","step")),(s,a,t,v)->t==null? 0d:((ummisco.gama.spatialmodelcoupling.model.ModelSkill)t).getModelStep(s),null,null);
 _var(ummisco.gama.spatialmodelcoupling.model.ModelSkill.class,desc(2,S("type","2","name","next_execution_date")),(s,a,t,v)->t==null? 0d:((ummisco.gama.spatialmodelcoupling.model.ModelSkill)t).getNextExecutionDate(s),null,null);
 _var(ummisco.gama.spatialmodelcoupling.model.ModelSkill.class,desc(3,S("type","3","name","is_allowed_to_run","init",FALSE)),(s,a,t,v)->t==null? false:((ummisco.gama.spatialmodelcoupling.model.ModelSkill)t).getIsExecuted(s),null,null);
 _var(ummisco.gama.spatialmodelcoupling.model.ModelSkill.class,desc(11,S("type","11","name","space_particle")),(s,a,t,v)->t==null? null:((ummisco.gama.spatialmodelcoupling.model.ModelSkill)t).getSpaceParticle(s),null,null);
 _var(ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2.class,desc(5,S("type","5","name","calendar")),null,null,null);
 }public void initializeAction() throws SecurityException, NoSuchMethodException {
+_action((s,a,t,v)->{((ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill) t).applyModifications(s);return null;},desc(PRIM,new Children(),NAME,"apply_modification",TYPE,Ti(void.class),VIRTUAL,FALSE),ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill.class.getMethod("applyModifications",SC));
 _action((s,a,t,v)->{((ummisco.gama.spatialmodelcoupling.model.ModelSkill) t).requestModification(s);return null;},desc(PRIM,new Children(desc(ARG,NAME,"parameter",TYPE,"4","optional",FALSE),desc(ARG,NAME,"value",TYPE,"2","optional",FALSE)),NAME,"request_modification",TYPE,Ti(void.class),VIRTUAL,FALSE),ummisco.gama.spatialmodelcoupling.model.ModelSkill.class.getMethod("requestModification",SC));
-_action((s,a,t,v)->{((ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2) t).insertProcessList(s);return null;},desc(PRIM,new Children(desc(ARG,NAME,"process",TYPE,"14","optional",FALSE),desc(ARG,NAME,"step",TYPE,"2","optional",FALSE)),NAME,"scheduler_insert",TYPE,Ti(void.class),VIRTUAL,FALSE),ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2.class.getMethod("insertProcessList",SC));
-_action((s,a,t,v)->{((ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2) t).executeFirstCalendarEntry(s);return null;},desc(PRIM,new Children(),NAME,"schedule",TYPE,Ti(void.class),VIRTUAL,FALSE),ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2.class.getMethod("executeFirstCalendarEntry",SC));
 _action((s,a,t,v)->((ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2) t).printCalendar(s),desc(PRIM,new Children(),NAME,"print_calendar",TYPE,Ti(S),VIRTUAL,FALSE),ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2.class.getMethod("printCalendar",SC));
+_action((s,a,t,v)->{((ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2) t).executeFirstCalendarEntry(s);return null;},desc(PRIM,new Children(),NAME,"schedule",TYPE,Ti(void.class),VIRTUAL,FALSE),ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2.class.getMethod("executeFirstCalendarEntry",SC));
+_action((s,a,t,v)->{((ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2) t).insertProcessList(s);return null;},desc(PRIM,new Children(desc(ARG,NAME,"process",TYPE,"14","optional",FALSE),desc(ARG,NAME,"step",TYPE,"2","optional",FALSE)),NAME,"scheduler_insert",TYPE,Ti(void.class),VIRTUAL,FALSE),ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2.class.getMethod("insertProcessList",SC));
 }public void initializeSkill()  {
+_skill("conflict_resolver",ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill.class,AS);
 _skill("coupled_model",ummisco.gama.spatialmodelcoupling.model.ModelSkill.class,AS);
 _skill("scheduleV2",ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2.class,AS);
 }

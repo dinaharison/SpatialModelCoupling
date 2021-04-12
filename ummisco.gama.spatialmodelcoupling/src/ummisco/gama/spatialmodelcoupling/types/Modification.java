@@ -21,6 +21,10 @@ public class Modification {
 		public String ToString() {
 			return "Agent : " + this.agent.getName() + " Modification Value : " + this.value;
 		}
+		
+		public Double getExecutedTime() {
+			return this.executedTime;
+		}
 }
 
 //créer sur gaml
