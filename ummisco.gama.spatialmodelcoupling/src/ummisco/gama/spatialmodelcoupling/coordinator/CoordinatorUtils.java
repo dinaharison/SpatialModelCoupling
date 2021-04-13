@@ -44,14 +44,20 @@ public class CoordinatorUtils {
 		       Modification firstItem = mods.iterator().next();
 		       LinkedList<Modification> toRemove = getSimultataneousModificaitons(firstItem,mods);
 		       mods.removeAll(toRemove);
-		       listFinal.add(toRemove.stream()
-		            .sorted(compareByParam)
-		            .collect(Collectors.toCollection(LinkedList::new))
-		       );
+		       
+		       while(!toRemove.isEmpty()){
+		           Modification mod = toRemove.iterator().next();
+		           LinkedList<Modification> toRemoveTemp = toRemove.stream()
+		            .filter(m -> m.getParameter().equals(mod.getParameter()))
+		            .collect(Collectors.toCollection(LinkedList::new));
+		           
+		           listFinal.add(toRemoveTemp);
+		           toRemove.removeAll(toRemoveTemp);
+		       }
 		   }
 		   
 		   return listFinal;
-		}
+	}
 	
 	//a modifier
 	public static double evaluateModification(String parameter, Map<Modification,String> modifications, double parameterValue) {
