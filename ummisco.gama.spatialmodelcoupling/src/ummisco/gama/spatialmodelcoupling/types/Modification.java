@@ -20,8 +20,8 @@ public class Modification {
 			//this.operation = o;
 		}
 		
-		public String ToString() {
-			return "Agent : " + this.agent.getName() + " Modification Value : " + this.value;
+		public String toString() {
+			return "Agent : " + this.agent.getName() + " Modification Value : " + this.value + "Exe at : " + this.executedTime;
 		}
 		
 		public Double getExecutedTime() {

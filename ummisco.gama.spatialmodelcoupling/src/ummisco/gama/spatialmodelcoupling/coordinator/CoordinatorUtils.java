@@ -76,5 +76,17 @@ public class CoordinatorUtils {
 	public static ModelRelation getModelInteraction(String param, List<ModelRelation> mRL) {
 		return mRL.stream().filter((m)->m.getInvolvedParameter().equals(param)).findFirst().get();
 	}
+	
+	public static void printModificationList(LinkedList<LinkedList<Modification>> mods) {
+		
+		mods.stream().forEach(				
+				item -> {
+					System.out.println("*****************************************");
+					item.stream().forEach(							
+							e -> System.out.println(e.toString())							
+							);
+				}				
+				);		
+	}
 
 }

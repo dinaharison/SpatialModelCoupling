@@ -82,6 +82,9 @@ public class ConflicResolverSkill extends Skill{
 						}
 					}
 					
+					//print 
+					newEvaList.stream().forEach(e->System.out.println(e.toString()));
+					
 					a.setAttribute(parameter, evaluation);
 					
 				}
@@ -110,7 +113,12 @@ public class ConflicResolverSkill extends Skill{
 		List<ModelRelation> list = (List<ModelRelation>)a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION);
 		
 		String param = scope.getArg(IConflictResolverSkill.INVOLVED_PARAMETER, IType.STRING).toString();
-		String attr = scope.getArg(IConflictResolverSkill.FILTER_BY_ATTRIBUTE, IType.STRING).toString();
+		
+		String attr = "";
+		if(scope.getArg(IConflictResolverSkill.FILTER_BY_ATTRIBUTE, IType.STRING)!=null) {
+			attr = scope.getArg(IConflictResolverSkill.FILTER_BY_ATTRIBUTE, IType.STRING).toString();
+		}	
+		
 		boolean intra_comp = scope.getBoolArg(IConflictResolverSkill.INTRA_COMPETITION);
 		boolean extra_comp = scope.getBoolArg(IConflictResolverSkill.EXTRA_COMPETITION);
 		boolean fair_dist = scope.getBoolArg(IConflictResolverSkill.FAIR_DISTRIBUTION);
