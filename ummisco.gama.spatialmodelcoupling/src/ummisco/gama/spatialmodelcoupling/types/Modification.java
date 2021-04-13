@@ -9,12 +9,14 @@ public class Modification {
 		public IAgent agent;
 		public double value;
 		public double executedTime;
+		public String param;
 		//public String operation;
 
-		public Modification(IAgent a, double v) {
+		public Modification(IAgent a, double v, String param) {
 			this.agent = a;
 			this.value = v;
 			this.executedTime = (Double) a.getAttribute(IModele.NEXT_EXECUTION_DATE);
+			this.param = param;
 			//this.operation = o;
 		}
 		

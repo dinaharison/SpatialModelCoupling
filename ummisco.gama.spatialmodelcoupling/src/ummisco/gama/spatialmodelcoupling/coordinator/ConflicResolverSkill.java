@@ -14,10 +14,10 @@ import ummisco.gama.spatialmodelcoupling.coordinator.IConflictResolverSkill;
 @skill(name = IConflictResolverSkill.SKILL_NAME, concept= {IConcept.SKILL})
 @vars({
 		@variable(name = IConflictResolverSkill.MODIFICATION_LIST,
-		type = IType.MAP, init ="[]" ),
+		type = IType.LIST, init ="[]" ),
 		
 		@variable(name = "evaluation_list",
-		type = IType.MAP, init = "[]")
+		type = IType.LIST, init = "[]")
 	 }
 	 )
 public class ConflicResolverSkill extends Skill{

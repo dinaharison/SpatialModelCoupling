@@ -3,6 +3,7 @@ package ummisco.gama.spatialmodelcoupling.model;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
 
+import java.util.List;
 import java.util.Map;
 
 import msi.gama.metamodel.agent.IAgent;
@@ -63,7 +64,7 @@ public class ModelSkill extends Skill {
 		
 		IAgent space = this.getSpaceParticle(scope);
 		if(!space.dead()) {
-			Map<Modification,String> modl = (Map<Modification,String>) space.getAttribute(IConflictResolverSkill.MODIFICATION_LIST);
+			List<Modification> modl = (List<Modification>) space.getAttribute(IConflictResolverSkill.MODIFICATION_LIST);
 			
 			IAgent a = scope.getAgent();
 			String p = scope.getArg(IModele.PARAMETER, IType.STRING).toString();
@@ -71,9 +72,9 @@ public class ModelSkill extends Skill {
 			
 			//System.out.println(a.getName() + " executed on : " + a.getAttribute(IModele.NEXT_EXECUTION_DATE) + " cycle : " + scope.getSimulation().getCycle(scope));
 			
-			Modification mod = new Modification(a, v);
+			Modification mod = new Modification(a, v, p);
 			
-			modl.put(mod, p);
+			modl.add(mod);
 			
 			space.setAttribute(IConflictResolverSkill.MODIFICATION_LIST, modl);
 		}else {

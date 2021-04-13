@@ -60,8 +60,8 @@ public class GamlAdditions extends AbstractGamlAdditions {
 	initializeAction();
 	initializeSkill();
 }public void initializeVars()  {
-_var(ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill.class,desc(10,S("type","10","name","modification_list","init","[]")),null,null,null);
-_var(ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill.class,desc(10,S("type","10","name","evaluation_list","init","[]")),null,null,null);
+_var(ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill.class,desc(5,S("type","5","name","modification_list","init","[]")),null,null,null);
+_var(ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill.class,desc(5,S("type","5","name","evaluation_list","init","[]")),null,null,null);
 _var(ummisco.gama.spatialmodelcoupling.model.ModelSkill.class,desc(2,S("type","2","name","step")),(s,a,t,v)->t==null? 0d:((ummisco.gama.spatialmodelcoupling.model.ModelSkill)t).getModelStep(s),null,null);
 _var(ummisco.gama.spatialmodelcoupling.model.ModelSkill.class,desc(2,S("type","2","name","next_execution_date")),(s,a,t,v)->t==null? 0d:((ummisco.gama.spatialmodelcoupling.model.ModelSkill)t).getNextExecutionDate(s),null,null);
 _var(ummisco.gama.spatialmodelcoupling.model.ModelSkill.class,desc(3,S("type","3","name","is_allowed_to_run","init",FALSE)),(s,a,t,v)->t==null? false:((ummisco.gama.spatialmodelcoupling.model.ModelSkill)t).getIsExecuted(s),null,null);
