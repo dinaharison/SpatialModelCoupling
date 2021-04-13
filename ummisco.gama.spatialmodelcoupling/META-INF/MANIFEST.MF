@@ -6,4 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: ummisco.gama.spatialmodelcoupling
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: msi.gama.core;bundle-version="1.8.1",
- msi.gama.ext;bundle-version="1.8.1"
+ msi.gama.ext;bundle-version="1.8.1",
+ ummisco.gama.annotations

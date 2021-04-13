@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import ummisco.gama.spatialmodelcoupling.types.ModelRelation;
 import ummisco.gama.spatialmodelcoupling.types.Modification;
 
 public class CoordinatorUtils {
 	
-	public static LinkedList<Modification> sortModificationsByTime(List<Modification> modifications){
+	public static LinkedList<Modification> sortModificationsByTime(List<Modification> modifications){  ///first
 	    
 	    return new LinkedList<Modification> (
 	        modifications.stream()
@@ -35,7 +36,7 @@ public class CoordinatorUtils {
 	        );
 	}
 	
-	public static LinkedList<LinkedList<Modification>> groupByTime(List<Modification> mods){
+	public static LinkedList<LinkedList<Modification>> groupByTime(List<Modification> mods){ ///second
 		   LinkedList<LinkedList<Modification>> listFinal = new LinkedList();
 		   
 		   Comparator<Modification> compareByParam = (m1,m2) -> m1.getParameter().compareTo(m2.getParameter());
@@ -60,42 +61,20 @@ public class CoordinatorUtils {
 	}
 	
 	//a modifier
-	public static double evaluateModification(String parameter, Map<Modification,String> modifications, double parameterValue) {
+	public static double evaluateModification(String parameter, LinkedList<Modification> mods, double parameterValue) {
 		double evaluation = parameterValue;
 
-		for(Map.Entry<Modification, String> entry:modifications.entrySet()) {
-			if(parameter.equals(entry.getValue())) {
-				evaluation += entry.getKey().value;
-			}
+		for (Modification mod : mods) {
+			
+			evaluation += mod.value;
+			
 		}
 
 		return evaluation;
 	}
-
-	public static Map<Modification,String> evaluationList(String parameter, Map<Modification,String> modifications){
-		Map<Modification,String> evaList = new HashMap<Modification,String>();
-
-		for(Map.Entry<Modification, String> entry:modifications.entrySet()) {
-			if(parameter.equals(entry.getValue())) {
-				evaList.put(entry.getKey(), entry.getValue());
-			}
-		}
-
-		return evaList;
-	}
-
-	public static List<String> getParameterList(Map<Modification,String> modificationList){
-
-		List<String> paramList = new ArrayList<>();
-
-		for(Map.Entry<Modification,String> entry:modificationList.entrySet()) {
-			String parameter = entry.getValue();
-			if(!paramList.contains(parameter)){
-				paramList.add(parameter);
-			}
-		}
-
-		return paramList;
+	
+	public static ModelRelation getModelInteraction(String param, List<ModelRelation> mRL) {
+		return mRL.stream().filter((m)->m.getInvolvedParameter().equals(param)).findFirst().get();
 	}
 
 }

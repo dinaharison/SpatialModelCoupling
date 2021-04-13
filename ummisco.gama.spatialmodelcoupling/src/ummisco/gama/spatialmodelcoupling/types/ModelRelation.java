@@ -9,21 +9,21 @@ import msi.gaml.statements.IStatement;
 
 public class ModelRelation {
 
-	private String relationName;
-	private List<ISpecies> involvedModels;
+	//private String relationName;
+	//private List<ISpecies> involvedModels;
 	private String involvedParameter;
 	private String coordinationMethod;
 	
-	public ModelRelation(String relationName, List<ISpecies> involvedModels,
-			String involvedParameter, String coordinationMethod) {
+	public ModelRelation(String involvedParameter, String coordinationMethod) {
 		super();
-		this.relationName = relationName;
-		this.involvedModels = involvedModels;
+		//this.relationName = relationName;
+		//this.involvedModels = involvedModels;
+		
 		this.involvedParameter = involvedParameter;
 		this.coordinationMethod = coordinationMethod;
 	}
 	
-	public String getRelationName() {
+	/*public String getRelationName() {
 		return relationName;
 	}
 	public void setRelationName(String relationName) {
@@ -34,7 +34,8 @@ public class ModelRelation {
 	}
 	public void setInvolvedModels(List<ISpecies> involvedModels) {
 		this.involvedModels = involvedModels;
-	}
+	} */
+	
 	public String getInvolvedParameter() {
 		return involvedParameter;
 	}
@@ -48,18 +49,16 @@ public class ModelRelation {
 		this.coordinationMethod = coordinationMethod;
 	}
 	
-	public static String ConvertToString(ModelRelation mR) {
+	public static String toString(ModelRelation mR) {
 		String s ="";
 		
-		s = mR.relationName + " \n " + 
-			"Parameter : " + mR.involvedParameter + "\n" +
-			"Coordination Method : " + mR.coordinationMethod + "\n" +
-			"Involved Models : ";
+		s = "Parameter : " + mR.involvedParameter + "\n" +
+			"Coordination Method : " + mR.coordinationMethod + "\n";
 		
-		Iterator<ISpecies> I = mR.getInvolvedModels().iterator();
+		/*Iterator<ISpecies> I = mR.getInvolvedModels().iterator();
 		while(I.hasNext()) {
 			s += I.next().getName() + "\n"; 
-		}	
+		}	*/
 		return s;
 	}
 }
