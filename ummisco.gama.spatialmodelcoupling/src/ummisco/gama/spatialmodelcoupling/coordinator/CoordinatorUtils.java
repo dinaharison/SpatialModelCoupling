@@ -36,17 +36,22 @@ public class CoordinatorUtils {
 	}
 	
 	public static LinkedList<LinkedList<Modification>> groupByTime(List<Modification> mods){
-	   LinkedList<LinkedList<Modification>> listFinal = new LinkedList();
-	   
-	   while(!mods.isEmpty()){
-	       Modification firstItem = mods.iterator().next();
-	       LinkedList<Modification> toRemove = getSimultataneousModificaitons(firstItem,mods);
-	       listFinal.add(toRemove);
-	       mods.removeAll(toRemove);
-	   }
-	   
-	   return listFinal;
-	}
+		   LinkedList<LinkedList<Modification>> listFinal = new LinkedList();
+		   
+		   Comparator<Modification> compareByParam = (m1,m2) -> m1.getParameter().compareTo(m2.getParameter());
+		   
+		   while(!mods.isEmpty()){
+		       Modification firstItem = mods.iterator().next();
+		       LinkedList<Modification> toRemove = getSimultataneousModificaitons(firstItem,mods);
+		       mods.removeAll(toRemove);
+		       listFinal.add(toRemove.stream()
+		            .sorted(compareByParam)
+		            .collect(Collectors.toCollection(LinkedList::new))
+		       );
+		   }
+		   
+		   return listFinal;
+		}
 	
 	//a modifier
 	public static double evaluateModification(String parameter, Map<Modification,String> modifications, double parameterValue) {

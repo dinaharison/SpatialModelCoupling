@@ -27,6 +27,10 @@ public class Modification {
 		public Double getExecutedTime() {
 			return this.executedTime;
 		}
+		
+		public String getParameter() {
+			return this.param;
+		}
 }
 
 //créer sur gaml
