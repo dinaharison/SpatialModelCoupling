@@ -11,30 +11,31 @@ public class ModelRelation {
 
 	//private String relationName;
 	//private List<ISpecies> involvedModels;
-	private String involvedParameter;
-	private String coordinationMethod;
-	
-	public ModelRelation(String involvedParameter, String coordinationMethod) {
+	private String involvedParameter;	
+	private String agentAttr;
+	private boolean intra_comp;
+	private boolean extra_comp;
+	private boolean fair_dist;
+	private ISpecies dom_spec;
+
+	public ModelRelation(String involvedParameter, String agentAttr, boolean intra_comp,
+			boolean extra_comp, boolean fair_dist, ISpecies dom_spec) {
 		super();
-		//this.relationName = relationName;
-		//this.involvedModels = involvedModels;
-		
 		this.involvedParameter = involvedParameter;
-		this.coordinationMethod = coordinationMethod;
+		this.agentAttr = agentAttr;
+		this.intra_comp = intra_comp;
+		this.extra_comp = extra_comp;
+		this.fair_dist = fair_dist;
+		this.dom_spec = dom_spec;
 	}
 	
-	/*public String getRelationName() {
-		return relationName;
+	public ISpecies getDom_spec() {
+		return dom_spec;
 	}
-	public void setRelationName(String relationName) {
-		this.relationName = relationName;
+
+	public void setDom_spec(ISpecies dom_spec) {
+		this.dom_spec = dom_spec;
 	}
-	public List<ISpecies> getInvolvedModels() {
-		return involvedModels;
-	}
-	public void setInvolvedModels(List<ISpecies> involvedModels) {
-		this.involvedModels = involvedModels;
-	} */
 	
 	public String getInvolvedParameter() {
 		return involvedParameter;
@@ -42,23 +43,47 @@ public class ModelRelation {
 	public void setInvolvedParameter(String involvedParameter) {
 		this.involvedParameter = involvedParameter;
 	}
-	public String getCoordinationMethod() {
-		return coordinationMethod;
+	
+	public String getAgentAttr() {
+		return agentAttr;
 	}
-	public void setCoordinationMethod(String coordinationMethod) {
-		this.coordinationMethod = coordinationMethod;
+
+	public void setAgentAttr(String agentAttr) {
+		this.agentAttr = agentAttr;
+	}
+
+	public boolean isIntra_comp() {
+		return intra_comp;
+	}
+
+	public void setIntra_comp(boolean intra_comp) {
+		this.intra_comp = intra_comp;
+	}
+
+	public boolean isExtra_comp() {
+		return extra_comp;
+	}
+
+	public void setExtra_comp(boolean extra_comp) {
+		this.extra_comp = extra_comp;
+	}
+
+	public boolean isFair_dist() {
+		return fair_dist;
+	}
+
+	public void setFair_dist(boolean fair_dist) {
+		this.fair_dist = fair_dist;
 	}
 	
 	public static String toString(ModelRelation mR) {
 		String s ="";
 		
-		s = "Parameter : " + mR.involvedParameter + "\n" +
-			"Coordination Method : " + mR.coordinationMethod + "\n";
-		
-		/*Iterator<ISpecies> I = mR.getInvolvedModels().iterator();
-		while(I.hasNext()) {
-			s += I.next().getName() + "\n"; 
-		}	*/
+		s = "Parameter : " + mR.involvedParameter + "\n" + 
+			"intraspecific competition : " + mR.intra_comp + "\n" + 
+			"extraspecific competition : " + mR.extra_comp + " Dominant species :"+ mR.dom_spec + "\n" + 
+			"fair distribution : " + mR.fair_dist + "\n";
+
 		return s;
 	}
 }

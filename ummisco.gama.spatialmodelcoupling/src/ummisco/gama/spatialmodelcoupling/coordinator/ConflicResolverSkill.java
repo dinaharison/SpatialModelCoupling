@@ -53,8 +53,36 @@ public class ConflicResolverSkill extends Skill{
 					//handle conflict
 					List<ModelRelation> mRL = (List<ModelRelation>) a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION); 
 					ModelRelation mR = CoordinatorUtils.getModelInteraction(parameter, mRL);
+					LinkedList<Modification> newEvaList = evaList;
 					
-					a.getSpecies().getAction(mR.getCoordinationMethod()).executeOn(scope);
+					if(!mR.getAgentAttr().isEmpty()) {
+						//filter the modification list by the agent attribute
+						newEvaList = DefaultCoordinatorFuctions.filterUsingAgentAttribute(evaList, mR.getAgentAttr());
+					}
+					
+					if(mR.isExtra_comp()) {
+						//filter the modification list by using an extraspecific competition function
+						newEvaList = DefaultCoordinatorFuctions.extraspecificCompetition(evaList, mR.getDom_spec());
+					}
+					
+					if(mR.isIntra_comp()) {
+						//filter the modification list by using an intra specific competition function
+						newEvaList = DefaultCoordinatorFuctions.intraspecificCompetition(evaList);
+					}
+					
+					if(mR.isFair_dist()) {
+						//change the value of the modification so the ressource consumption is fair among agents
+						newEvaList = DefaultCoordinatorFuctions.fairModification(evaList, avalaibleRessource);
+					}
+					
+					for (Modification mod : newEvaList) {
+						double s = evaluation + mod.value;
+						if(s>=0) {
+							evaluation = s;
+						}
+					}
+					
+					a.setAttribute(parameter, evaluation);
 					
 				}
 				else {
@@ -70,9 +98,9 @@ public class ConflicResolverSkill extends Skill{
 	@action(name = IConflictResolverSkill.COORDINATOR_NAME,
 			args = {
 					@arg(name = IConflictResolverSkill.INVOLVED_PARAMETER, type = IType.STRING),
-					@arg(name = IConflictResolverSkill.FUNCTION_NAME, type = IType.STRING),
 					@arg(name = IConflictResolverSkill.FILTER_BY_ATTRIBUTE, type = IType.STRING, optional=true),
 					@arg(name = IConflictResolverSkill.INTRA_COMPETITION, type = IType.BOOL, optional = true),
+					@arg(name = IConflictResolverSkill.DOMINANT_SPEC, type = IType.SPECIES, optional = true),
 					@arg(name = IConflictResolverSkill.EXTRA_COMPETITION, type = IType.BOOL, optional = true),
 					@arg(name = IConflictResolverSkill.FAIR_DISTRIBUTION,type = IType.BOOL, optional = true)
 			}
@@ -82,14 +110,13 @@ public class ConflicResolverSkill extends Skill{
 		List<ModelRelation> list = (List<ModelRelation>)a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION);
 		
 		String param = scope.getArg(IConflictResolverSkill.INVOLVED_PARAMETER, IType.STRING).toString();
-		String fct = scope.getArg(IConflictResolverSkill.FUNCTION_NAME, IType.STRING).toString();
-		
 		String attr = scope.getArg(IConflictResolverSkill.FILTER_BY_ATTRIBUTE, IType.STRING).toString();
 		boolean intra_comp = scope.getBoolArg(IConflictResolverSkill.INTRA_COMPETITION);
 		boolean extra_comp = scope.getBoolArg(IConflictResolverSkill.EXTRA_COMPETITION);
 		boolean fair_dist = scope.getBoolArg(IConflictResolverSkill.FAIR_DISTRIBUTION);
+		ISpecies dom_spec = (ISpecies) scope.getArg(IConflictResolverSkill.DOMINANT_SPEC, IType.SPECIES);
 		
-		ModelRelation mR = new ModelRelation(param, fct);
+		ModelRelation mR = new ModelRelation(param, attr, intra_comp, extra_comp, fair_dist, dom_spec);
 		list.add(mR);
 		
 		a.setAttribute(IConflictResolverSkill.MODEL_INTERACTION, list);

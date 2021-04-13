@@ -31,6 +31,7 @@ public class Modification {
 		public String getParameter() {
 			return this.param;
 		}
+		
 }
 
 //créer sur gaml
