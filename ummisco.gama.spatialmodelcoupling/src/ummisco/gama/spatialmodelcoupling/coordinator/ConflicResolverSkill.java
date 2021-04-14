@@ -36,60 +36,64 @@ public class ConflicResolverSkill extends Skill{
 		List<Modification> mods = (List<Modification>)a.getAttribute(IConflictResolverSkill.MODIFICATION_LIST);
 		
 		//sort Modification by time
-		mods = CoordinatorUtils.sortModificationsByTime(mods); 
+		mods = CoordinatorUtils.sortModificationsByTime(mods);		
 		
 		//sort by time and parameter each element represents a modification on the same parameter at the same time
 		LinkedList<LinkedList<Modification>> modSorted = CoordinatorUtils.groupByTime(mods); 
 		
 		for (LinkedList<Modification> evaList : modSorted) {
 			//evaluate the parameter
-			Modification firstModification = evaList.iterator().next();
-			String parameter = firstModification.getParameter();
-			double avalaibleRessource = (Double) a.getAttribute(parameter);			
-			
-			if(!(avalaibleRessource==0)) {
-				double evaluation = CoordinatorUtils.evaluateModification(parameter, evaList, avalaibleRessource);
-				if(evaluation<0) {
-					//handle conflict
-					List<ModelRelation> mRL = (List<ModelRelation>) a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION); 
-					ModelRelation mR = CoordinatorUtils.getModelInteraction(parameter, mRL);
-					LinkedList<Modification> newEvaList = evaList;
-					
-					if(!mR.getAgentAttr().isEmpty()) {
-						//filter the modification list by the agent attribute
-						newEvaList = DefaultCoordinatorFuctions.filterUsingAgentAttribute(evaList, mR.getAgentAttr());
-					}
-					
-					if(mR.isExtra_comp()) {
-						//filter the modification list by using an extraspecific competition function
-						newEvaList = DefaultCoordinatorFuctions.extraspecificCompetition(evaList, mR.getDom_spec());
-					}
-					
-					if(mR.isIntra_comp()) {
-						//filter the modification list by using an intra specific competition function
-						newEvaList = DefaultCoordinatorFuctions.intraspecificCompetition(evaList);
-					}
-					
-					if(mR.isFair_dist()) {
-						//change the value of the modification so the ressource consumption is fair among agents
-						newEvaList = DefaultCoordinatorFuctions.fairModification(evaList, avalaibleRessource);
-					}
-					
-					for (Modification mod : newEvaList) {
-						double s = evaluation + mod.value;
-						if(s>=0) {
-							evaluation = s;
+			if(!evaList.isEmpty()) {
+				Modification firstModification = evaList.getFirst();
+				String p = firstModification.getParameter();
+				
+				double avalaibleRessource = (Double) a.getAttribute(p);
+				System.out.println("parameter : " + p + " value : " + avalaibleRessource);
+				
+				if(avalaibleRessource>0) {
+					double evaluation = CoordinatorUtils.evaluateModification(p, evaList, avalaibleRessource);
+					if(evaluation<0) {
+						//handle conflict
+						List<ModelRelation> mRL = (List<ModelRelation>) a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION); 
+						ModelRelation mR = CoordinatorUtils.getModelInteraction(p, mRL);
+						LinkedList<Modification> newEvaList = evaList;
+						
+						if(!mR.getAgentAttr().isEmpty()) {
+							//filter the modification list by the agent attribute
+							newEvaList = DefaultCoordinatorFuctions.filterUsingAgentAttribute(evaList, mR.getAgentAttr());
 						}
+						
+						if(mR.isExtra_comp()) {
+							//filter the modification list by using an extraspecific competition function
+							newEvaList = DefaultCoordinatorFuctions.extraspecificCompetition(evaList, mR.getDom_spec());
+						}
+						
+						if(mR.isIntra_comp()) {
+							//filter the modification list by using an intra specific competition function
+							newEvaList = DefaultCoordinatorFuctions.intraspecificCompetition(evaList);
+						}
+						
+						if(mR.isFair_dist()) {
+							//change the value of the modification so the ressource consumption is fair among agents
+							newEvaList = DefaultCoordinatorFuctions.fairModification(evaList, avalaibleRessource);
+						}
+						
+						for (Modification mod : newEvaList) {
+							double s = evaluation + mod.value;
+							if(s>=0) {
+								evaluation = s;
+							}
+						}
+						
+						//print 
+						//System.out.println("*****************************************************");
+						//newEvaList.stream().forEach(e->System.out.println(e.toString()));
+						
+						a.setAttribute(p, newEvaList);
 					}
-					
-					//print 
-					newEvaList.stream().forEach(e->System.out.println(e.toString()));
-					
-					a.setAttribute(parameter, evaluation);
-					
-				}
-				else {
-					a.setAttribute(parameter, evaluation);
+					else {
+						a.setAttribute(p, evaluation);
+					}
 				}
 			}
 		}

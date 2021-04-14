@@ -21,7 +21,7 @@ public class Modification {
 		}
 		
 		public String toString() {
-			return "Agent : " + this.agent.getName() + " Modification Value : " + this.value + "Exe at : " + this.executedTime;
+			return "Agent : " + this.agent.getName() + " Modification Value : " + this.value + " Exe at : " + this.executedTime;
 		}
 		
 		public Double getExecutedTime() {
