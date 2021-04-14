@@ -20,7 +20,7 @@ public class DefaultCoordinatorFuctions {
 		for (Modification m : mods) {
 			double taux = (m.value*100)/total;
 			double newValue = (taux*param)/100;
-			Modification newMod = new Modification(m.agent, newValue, m.param);
+			Modification newMod = new Modification(m.agent, newValue, m.getParameter());
 			newList.add(newMod);
 		}
 		

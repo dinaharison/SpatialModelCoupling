@@ -12,6 +12,7 @@ import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.runtime.IScope;
+import msi.gaml.operators.Cast;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
 import msi.gaml.types.IType;
@@ -46,11 +47,13 @@ public class ConflicResolverSkill extends Skill{
 			if(!evaList.isEmpty()) {
 				Modification firstModification = evaList.getFirst();
 				String p = firstModification.getParameter();
+				System.out.println("parameter : " + p);
 				
-				double avalaibleRessource = (Double) a.getAttribute(p);
-				System.out.println("parameter : " + p + " value : " + avalaibleRessource);
+				double avalaibleRessource = Cast.asFloat(scope, a.getAttribute(p));
 				
-				if(avalaibleRessource>0) {
+				
+				
+				if(avalaibleRessource>=0) {
 					double evaluation = CoordinatorUtils.evaluateModification(p, evaList, avalaibleRessource);
 					if(evaluation<0) {
 						//handle conflict

@@ -9,7 +9,7 @@ public class Modification {
 		public IAgent agent;
 		public double value;
 		public double executedTime;
-		public String param;
+		private String param;
 		//public String operation;
 
 		public Modification(IAgent a, double v, String param) {
