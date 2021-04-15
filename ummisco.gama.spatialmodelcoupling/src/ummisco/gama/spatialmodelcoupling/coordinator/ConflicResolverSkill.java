@@ -47,13 +47,12 @@ public class ConflicResolverSkill extends Skill{
 			if(!evaList.isEmpty()) {
 				Modification firstModification = evaList.getFirst();
 				String p = firstModification.getParameter();
-				System.out.println("parameter : " + p);
+				
 				
 				double avalaibleRessource = Cast.asFloat(scope, a.getAttribute(p));
 				
 				
-				
-				if(avalaibleRessource>=0) {
+				if(avalaibleRessource>0) {
 					double evaluation = CoordinatorUtils.evaluateModification(p, evaList, avalaibleRessource);
 					if(evaluation<0) {
 						//handle conflict
@@ -97,6 +96,8 @@ public class ConflicResolverSkill extends Skill{
 					else {
 						a.setAttribute(p, evaluation);
 					}
+				}else if(avalaibleRessource==0) {
+					a.setAttribute(p, CoordinatorUtils.noRessource(p, evaList, avalaibleRessource));
 				}
 			}
 		}
@@ -114,7 +115,7 @@ public class ConflicResolverSkill extends Skill{
 					@arg(name = IConflictResolverSkill.EXTRA_COMPETITION, type = IType.BOOL, optional = true),
 					@arg(name = IConflictResolverSkill.FAIR_DISTRIBUTION,type = IType.BOOL, optional = true)
 			}
-			)
+	)
 	public void setCoordinatorFunction(IScope scope) {
 		IAgent a = scope.getAgent();
 		List<ModelRelation> list = (List<ModelRelation>)a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION);

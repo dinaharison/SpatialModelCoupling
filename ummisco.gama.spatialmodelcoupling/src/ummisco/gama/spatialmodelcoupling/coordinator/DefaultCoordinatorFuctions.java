@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.stream.Collectors;
 
+import msi.gama.runtime.IScope;
+import msi.gaml.operators.Cast;
 import msi.gaml.species.ISpecies;
 import ummisco.gama.spatialmodelcoupling.types.Modification;
 
@@ -25,13 +27,14 @@ public class DefaultCoordinatorFuctions {
 		}
 		
 		return(newList);
-	}
+	} /// ok 
 	
 	public static LinkedList<Modification> filterUsingAgentAttribute(LinkedList<Modification> mods,String attr){
 		Comparator<Modification> compareByAgentAttribute = (m1,m2) -> {
+			IScope scope = m1.agent.getScope();
 			
-			String o1 = m1.agent.getAttribute(attr).toString();
-			String o2 = m2.agent.getAttribute(attr).toString();
+			String o1 = Cast.asString(scope, m1.agent.getAttribute(attr)) ;
+			String o2 = Cast.asString(scope, m2.agent.getAttribute(attr));
 			
 			return o1.compareTo(o2);
 		};

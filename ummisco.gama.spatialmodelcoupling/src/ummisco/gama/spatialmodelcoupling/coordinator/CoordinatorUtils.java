@@ -22,7 +22,7 @@ public class CoordinatorUtils {
 	        .collect(
 	            Collectors.toCollection(LinkedList::new)
 	            )
-	         );	    
+	         );
 	}
 	
 	public static LinkedList<Modification> getSimultataneousModificaitons(Modification mod, List<Modification> mods){
@@ -68,6 +68,18 @@ public class CoordinatorUtils {
 			
 			evaluation += mod.value;
 			
+		}
+
+		return evaluation;
+	}
+	
+	public static double noRessource(String parameter, LinkedList<Modification> mods, double parameterValue) {
+		double evaluation = parameterValue;
+
+		for (Modification mod : mods) {
+			if(mod.value>0) {
+				evaluation += mod.value;
+			}
 		}
 
 		return evaluation;

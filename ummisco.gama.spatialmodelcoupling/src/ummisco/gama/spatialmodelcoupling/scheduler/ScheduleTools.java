@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import msi.gama.metamodel.agent.IAgent;
 import msi.gama.runtime.IScope;
@@ -39,16 +40,10 @@ public class ScheduleTools {
 	
 	
 	public static List<ProcessDate> getExecutedSpeciesAtCurrentStep(List<ProcessDate> calendar, double currentTime){
-		
-		List<ProcessDate> executedSpecies = new ArrayList<>();
-		Iterator<ProcessDate> I = calendar.iterator();
-		
-		while(I.hasNext()) {
-			ProcessDate p = I.next();
-			if(p.getNextExecutionDate()<=currentTime) {
-				executedSpecies.add(p);
-			}
-		}
+
+		List<ProcessDate> executedSpecies = calendar.stream()
+				.filter(p -> p.getNextExecutionDate()<=currentTime)
+				.collect(Collectors.toList());
 		
 		return executedSpecies;
 		

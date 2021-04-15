@@ -151,32 +151,7 @@
 <category id="Iterator operators"/>
 </operatorsCategories>
 <operators/>
-<skills>
-<skill class="ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill" extends="" id="conflict_resolver" name="conflict_resolver">
-<vars>
-<var constant="false" depends_on="" name="modification_list" type="list"/>
-<var constant="false" depends_on="" name="model_interaction" type="list"/>
-</vars>
-<actions>
-<action name="apply_modification" returnType="void">
-<args/>
-</action>
-<action name="define_coordinator_function" returnType="void">
-<args>
-<arg name="parameter" optional="true" type="string"/>
-<arg name="filter_using_model_attribute" optional="true" type="string"/>
-<arg name="intraspecific_competition" optional="true" type="boolean"/>
-<arg name="dominant_species" optional="true" type="species"/>
-<arg name="extraspecific_competition" optional="true" type="boolean"/>
-<arg name="fair_distribution" optional="true" type="boolean"/>
-</args>
-</action>
-</actions>
-<concepts>
-<concept id="skill"/>
-</concepts>
-</skill>
-</skills>
+<skills/>
 <architectures/>
 <speciess/>
 <insideStatementKinds/>
