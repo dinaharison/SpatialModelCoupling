@@ -52,14 +52,15 @@ public class ConflicResolverSkill extends Skill{
 				ModelRelation mR = CoordinatorUtils.getModelInteraction(p, mRL);
 				LinkedList<Modification> newEvaList = evaList;
 				
-				double avalaibleRessource = Cast.asFloat(scope, a.getAttribute(p));
+				double avalaibleRessource = Cast.asFloat(scope, a.getAttribute(p));				
 				
-				
-				if(avalaibleRessource>0) {
+				if(avalaibleRessource>0) {				
 					double evaluation = CoordinatorUtils.evaluateModification(p, evaList, avalaibleRessource);
 					if(evaluation<0) {
 						//handle conflict
 						
+						System.out.println("*********DEFAULT LIST*******************");
+						evaList.stream().forEach(m -> System.out.println(m.toString()));
 						
 						if(!mR.getAgentAttr().isEmpty()) {
 							//filter the modification list by the agent attribute
@@ -88,9 +89,9 @@ public class ConflicResolverSkill extends Skill{
 							}
 						}
 						
-						//print 
-						//System.out.println("*****************************************************");
-						//newEvaList.stream().forEach(e->System.out.println(e.toString()));
+						System.out.println("**************SORTED LIST*****************************");
+						
+						newEvaList.stream().forEach(e->System.out.println(e.toString()));
 						
 						a.setAttribute(p, newEvaList);
 					}

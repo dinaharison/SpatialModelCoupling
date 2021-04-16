@@ -16,14 +16,23 @@ public class DefaultCoordinatorFuctions {
 		double total = 0;
 		LinkedList<Modification> newList = new LinkedList<>();
 		for ( Modification m : mods) {
-			total += Math.abs(m.value); 
+			if(m.value<0) {
+				total += Math.abs(m.value);
+			}
 		}
 		
 		for (Modification m : mods) {
-			double taux = (m.value*100)/total;
-			double newValue = (taux*param)/100;
-			Modification newMod = new Modification(m.agent, newValue, m.getParameter());
-			newList.add(newMod);
+			if(m.value<0) {
+				double taux = (m.value*100)/total;
+				double newValue = (taux*param)/100;
+				Modification newMod = new Modification(m.agent, newValue, m.getParameter());
+				newList.add(newMod);
+			}else {
+				newList.add(m);
+			}
+			
+			
+			
 		}
 		
 		return(newList);

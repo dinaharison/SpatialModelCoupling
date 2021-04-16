@@ -151,30 +151,7 @@
 <category id="Iterator operators"/>
 </operatorsCategories>
 <operators/>
-<skills>
-<skill class="ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2" extends="" id="scheduleV2" name="scheduleV2">
-<vars>
-<var constant="false" depends_on="" name="calendar" type="list"/>
-</vars>
-<actions>
-<action name="scheduler_insert" returnType="void">
-<args>
-<arg name="process" optional="false" type="species"/>
-<arg name="step" optional="false" type="float"/>
-</args>
-</action>
-<action name="schedule" returnType="void">
-<args/>
-</action>
-<action name="print_calendar" returnType="string">
-<args/>
-</action>
-</actions>
-<concepts>
-<concept id="skill"/>
-</concepts>
-</skill>
-</skills>
+<skills/>
 <architectures/>
 <speciess/>
 <insideStatementKinds/>
