@@ -13,6 +13,7 @@ import msi.gama.precompiler.GamlAnnotations.getter;
 import msi.gama.precompiler.GamlAnnotations.skill;
 import msi.gama.precompiler.GamlAnnotations.variable;
 import msi.gama.precompiler.GamlAnnotations.vars;
+import msi.gaml.operators.Cast;
 import msi.gaml.skills.Skill;
 import msi.gaml.types.IType;
 import ummisco.gama.spatialmodelcoupling.coordinator.IConflictResolverSkill;
@@ -47,7 +48,7 @@ public class ModelSkill extends Skill {
 	
 	@getter(IModele.SPACE_PARTICLE)
 	public IAgent getSpaceParticle(IScope scope) {
-		return (IAgent) scope.getAgent().getAttribute(IModele.SPACE_PARTICLE);
+		return Cast.asAgent(scope, scope.getAgent().getAttribute(IModele.SPACE_PARTICLE)) ;
 	}
 	
 	@action(name = "request_modification", args = {

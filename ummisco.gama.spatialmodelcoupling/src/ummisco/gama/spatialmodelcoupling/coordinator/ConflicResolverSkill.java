@@ -48,6 +48,9 @@ public class ConflicResolverSkill extends Skill{
 				Modification firstModification = evaList.getFirst();
 				String p = firstModification.getParameter();
 				
+				List<ModelRelation> mRL = (List<ModelRelation>) a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION); 
+				ModelRelation mR = CoordinatorUtils.getModelInteraction(p, mRL);
+				LinkedList<Modification> newEvaList = evaList;
 				
 				double avalaibleRessource = Cast.asFloat(scope, a.getAttribute(p));
 				
@@ -56,13 +59,11 @@ public class ConflicResolverSkill extends Skill{
 					double evaluation = CoordinatorUtils.evaluateModification(p, evaList, avalaibleRessource);
 					if(evaluation<0) {
 						//handle conflict
-						List<ModelRelation> mRL = (List<ModelRelation>) a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION); 
-						ModelRelation mR = CoordinatorUtils.getModelInteraction(p, mRL);
-						LinkedList<Modification> newEvaList = evaList;
+						
 						
 						if(!mR.getAgentAttr().isEmpty()) {
 							//filter the modification list by the agent attribute
-							newEvaList = DefaultCoordinatorFuctions.filterUsingAgentAttribute(evaList, mR.getAgentAttr());
+							newEvaList = DefaultCoordinatorFuctions.filterUsingAgentAttribute(evaList, mR.getAgentAttr(), scope);
 						}
 						
 						if(mR.isExtra_comp()) {
@@ -72,7 +73,7 @@ public class ConflicResolverSkill extends Skill{
 						
 						if(mR.isIntra_comp()) {
 							//filter the modification list by using an intra specific competition function
-							newEvaList = DefaultCoordinatorFuctions.intraspecificCompetition(evaList);
+							newEvaList = DefaultCoordinatorFuctions.intraspecificCompetition(evaList,scope);
 						}
 						
 						if(mR.isFair_dist()) {

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,11 +40,11 @@ public class ScheduleTools {
 	}
 	
 	
-	public static List<ProcessDate> getExecutedSpeciesAtCurrentStep(List<ProcessDate> calendar, double currentTime){
+	public static LinkedList<ProcessDate> getExecutedSpeciesAtCurrentStep(List<ProcessDate> calendar, double currentTime){
 
-		List<ProcessDate> executedSpecies = calendar.stream()
+		LinkedList<ProcessDate> executedSpecies = calendar.stream()
 				.filter(p -> p.getNextExecutionDate()<=currentTime)
-				.collect(Collectors.toList());
+				.collect(Collectors.toCollection(LinkedList::new));
 		
 		return executedSpecies;
 		
@@ -58,7 +59,7 @@ public class ScheduleTools {
 			calendar.remove(p);
 			p.proceedToNextDate();
 			p.updateAgentStep(scope);
-			calendar.add(p);		
+			calendar.add(p);
 		}
 		
 		return sortCalendar(calendar);

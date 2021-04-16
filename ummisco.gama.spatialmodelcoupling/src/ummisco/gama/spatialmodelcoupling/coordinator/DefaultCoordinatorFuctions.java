@@ -29,9 +29,8 @@ public class DefaultCoordinatorFuctions {
 		return(newList);
 	} /// ok 
 	
-	public static LinkedList<Modification> filterUsingAgentAttribute(LinkedList<Modification> mods,String attr){
+	public static LinkedList<Modification> filterUsingAgentAttribute(LinkedList<Modification> mods,String attr, IScope scope){
 		Comparator<Modification> compareByAgentAttribute = (m1,m2) -> {
-			IScope scope = m1.agent.getScope();
 			
 			String o1 = Cast.asString(scope, m1.agent.getAttribute(attr)) ;
 			String o2 = Cast.asString(scope, m2.agent.getAttribute(attr));
@@ -60,8 +59,8 @@ public class DefaultCoordinatorFuctions {
 				);
 	}
 	
-	public static LinkedList<Modification> intraspecificCompetition(LinkedList<Modification> mods) {
-		return filterUsingAgentAttribute(mods, "name");
+	public static LinkedList<Modification> intraspecificCompetition(LinkedList<Modification> mods,IScope scope) {
+		return filterUsingAgentAttribute(mods, "name",scope);
 	}
 	
 

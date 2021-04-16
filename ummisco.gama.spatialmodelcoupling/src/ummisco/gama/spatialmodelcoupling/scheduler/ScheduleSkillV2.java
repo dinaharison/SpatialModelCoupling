@@ -116,11 +116,9 @@ public class ScheduleSkillV2 extends Skill{
 			while(IagentList.hasNext()) {
 				IAgent a = IagentList.next();
 				a.setAttribute(IModele.EXECUTION, true);
-				//count++;
-				//a.setAttribute(IModele.NEXT_EXECUTION_DATE, pED);
+				a.step(scope);
+				
 			}
-			
-			//System.out.println("ScheduleSkillClass : species : " + p.getProcess() + " executed : " +count);
 		}
 		
 	}
