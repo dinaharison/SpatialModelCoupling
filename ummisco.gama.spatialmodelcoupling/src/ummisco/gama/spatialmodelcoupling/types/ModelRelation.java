@@ -86,4 +86,15 @@ public class ModelRelation {
 
 		return s;
 	}
+	
+	public  String toString() {
+		String s ="";
+		
+		s = "Parameter : " + this.involvedParameter + "\n" + 
+			"intraspecific competition : " + this.intra_comp + "\n" + 
+			"extraspecific competition : " + this.extra_comp + " Dominant species :"+ this.dom_spec + "\n" + 
+			"fair distribution : " + this.fair_dist + "\n";
+
+		return s;
+	}
 }

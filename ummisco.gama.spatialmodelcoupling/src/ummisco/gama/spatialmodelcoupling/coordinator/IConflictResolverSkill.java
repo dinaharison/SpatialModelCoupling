@@ -19,9 +19,11 @@ public interface IConflictResolverSkill {
 	
 	public final static String INTRA_COMPETITION = "intraspecific_competition";
 	
-	public final static String EXTRA_COMPETITION = "extraspecific_competition";
+	public final static String INTER_COMPETITION = "interspecific_competition";
 	
 	public final static String FAIR_DISTRIBUTION = "fair_distribution";
 	
 	public final static String DOMINANT_SPEC = "dominant_species";
+	
+	public final static String IS_CONFLICTED = "is_conflicted";
 }

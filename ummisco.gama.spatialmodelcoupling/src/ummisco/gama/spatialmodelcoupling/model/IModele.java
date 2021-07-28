@@ -10,8 +10,15 @@ public interface IModele {
 	public final static String PRIORITY = "priority";
 	public final static String SPACE_PARTICLE = "space_particle";
 	
+	public final static String SET_SPACE_PARTICLE = "set_space_particle";
+	public final static String SPACE = "space";
+	
 	public final static String REQUEST_MODIFICATION = "request_modification";
 	public final static String PARAMETER = "parameter";
 	public final static String VALUE = "value";
+	
+	public final static String EXPLOITED_RESSOURCES = "exploited_ressource";
+	public final static String GET_RESSOURCE = "get_ressource";
+	public final static String RESSOURCE = "name";
 
 }

@@ -1,5 +1,7 @@
 package ummisco.gama.spatialmodelcoupling.coordinator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -23,6 +25,18 @@ public class CoordinatorUtils {
 	            Collectors.toCollection(LinkedList::new)
 	            )
 	         );
+	}
+	
+	public static LinkedList<Modification> sortModificationsByParameter(List<Modification> modifications) {
+		
+		Comparator<Modification> compareByParam = (m1,m2) -> m1.getParameter().compareTo(m2.getParameter());
+		
+		return new LinkedList<Modification>(
+				modifications.stream()
+				.sorted(compareByParam)
+				.collect(Collectors.toCollection(LinkedList::new))
+				);
+		
 	}
 	
 	public static LinkedList<Modification> getSimultataneousModificaitons(Modification mod, List<Modification> mods){
@@ -86,7 +100,16 @@ public class CoordinatorUtils {
 	}
 	
 	public static ModelRelation getModelInteraction(String param, List<ModelRelation> mRL) {
-		return mRL.stream().filter((m)->m.getInvolvedParameter().equals(param)).findFirst().get();
+		ModelRelation mr = null;
+		
+		for (ModelRelation m : mRL) {
+			if(m.getInvolvedParameter().contentEquals(param)) {
+				mr = m;
+				break;
+			}
+		}
+		return mr;
+		//return mRL.stream().filter((m)->m.getInvolvedParameter().equals(param)).findFirst().get();
 	}
 	
 	public static void printModificationList(LinkedList<LinkedList<Modification>> mods) {
@@ -99,6 +122,14 @@ public class CoordinatorUtils {
 							);
 				}				
 				);		
+	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(Double.toString(value));
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.doubleValue();
 	}
 
 }

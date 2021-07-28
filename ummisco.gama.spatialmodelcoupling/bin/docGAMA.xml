@@ -152,6 +152,61 @@
 </operatorsCategories>
 <operators/>
 <skills>
+<skill class="ummisco.gama.spatialmodelcoupling.coordinator.ConflicResolverSkill" extends="" id="conflict_resolver" name="conflict_resolver">
+<vars>
+<var constant="false" depends_on="" name="modification_list" type="list"/>
+<var constant="false" depends_on="" name="model_interaction" type="list"/>
+<var constant="false" depends_on="" name="is_conflicted" type="boolean"/>
+</vars>
+<actions>
+<action name="apply_modification" returnType="void">
+<args/>
+</action>
+<action name="define_coordinator_function" returnType="void">
+<args>
+<arg name="parameter" optional="true" type="string"/>
+<arg name="filter_using_model_attribute" optional="true" type="string"/>
+<arg name="intraspecific_competition" optional="true" type="boolean"/>
+<arg name="dominant_species" optional="true" type="species"/>
+<arg name="interspecific_competition" optional="true" type="boolean"/>
+<arg name="fair_distribution" optional="true" type="boolean"/>
+</args>
+</action>
+</actions>
+<concepts>
+<concept id="skill"/>
+</concepts>
+</skill>
+<skill class="ummisco.gama.spatialmodelcoupling.model.ModelSkill" extends="" id="coupled_model" name="coupled_model">
+<vars>
+<var constant="false" depends_on="" name="step" type="float"/>
+<var constant="false" depends_on="" name="next_execution_date" type="float"/>
+<var constant="false" depends_on="" name="is_allowed_to_run" type="boolean"/>
+<var constant="false" depends_on="" name="space_particle" type="agent"/>
+<var constant="false" depends_on="" name="exploited_ressource" type="list"/>
+</vars>
+<actions>
+<action name="request_modification" returnType="void">
+<args>
+<arg name="parameter" optional="false" type="string"/>
+<arg name="value" optional="false" type="float"/>
+</args>
+</action>
+<action name="set_space_particle" returnType="void">
+<args>
+<arg name="space" optional="false" type="agent"/>
+</args>
+</action>
+<action name="get_ressource" returnType="float">
+<args>
+<arg name="name" optional="false" type="string"/>
+</args>
+</action>
+</actions>
+<concepts>
+<concept id="skill"/>
+</concepts>
+</skill>
 <skill class="ummisco.gama.spatialmodelcoupling.scheduler.ScheduleSkillV2" extends="" id="scheduleV2" name="scheduleV2">
 <vars>
 <var constant="false" depends_on="" name="calendar" type="list"/>
@@ -168,6 +223,30 @@
 </action>
 <action name="print_calendar" returnType="string">
 <args/>
+</action>
+</actions>
+<concepts>
+<concept id="skill"/>
+</concepts>
+</skill>
+<skill class="ummisco.gama.spatialmodelcoupling.coordinator.ConflictResolverSkillV2" extends="" id="conflict_resolverV2" name="conflict_resolverV2">
+<vars>
+<var constant="false" depends_on="" name="modification_list" type="list"/>
+<var constant="false" depends_on="" name="model_interaction" type="list"/>
+</vars>
+<actions>
+<action name="apply_modification" returnType="void">
+<args/>
+</action>
+<action name="define_coordinator_function" returnType="void">
+<args>
+<arg name="parameter" optional="true" type="string"/>
+<arg name="filter_using_model_attribute" optional="true" type="string"/>
+<arg name="intraspecific_competition" optional="true" type="boolean"/>
+<arg name="dominant_species" optional="true" type="species"/>
+<arg name="interspecific_competition" optional="true" type="boolean"/>
+<arg name="fair_distribution" optional="true" type="boolean"/>
+</args>
 </action>
 </actions>
 <concepts>

@@ -26,21 +26,23 @@ import ummisco.gama.spatialmodelcoupling.types.Modification;
 		@variable(name = IConflictResolverSkill.MODIFICATION_LIST,
 		type = IType.LIST, init ="[]" ),
 		@variable(name = IConflictResolverSkill.MODEL_INTERACTION,
-		type = IType.LIST, init = "[]")
+		type = IType.LIST, init = "[]"),
+		@variable(name = IConflictResolverSkill.IS_CONFLICTED,
+		type = IType.BOOL, init = "false")
 	 }
 	 )
 public class ConflicResolverSkill extends Skill{
 	
 	@action(name = IConflictResolverSkill.APPLY_MODIFICATION)
-	public void applyModifications(IScope scope) {
+	public static void applyModifications(IScope scope) {
 		IAgent a = scope.getAgent();
 		List<Modification> mods = (List<Modification>)a.getAttribute(IConflictResolverSkill.MODIFICATION_LIST);
 		
 		//sort Modification by time
-		mods = CoordinatorUtils.sortModificationsByTime(mods);		
+		mods = CoordinatorUtils.sortModificationsByTime(mods);	
 		
 		//sort by time and parameter each element represents a modification on the same parameter at the same time
-		LinkedList<LinkedList<Modification>> modSorted = CoordinatorUtils.groupByTime(mods); 
+		LinkedList<LinkedList<Modification>> modSorted = CoordinatorUtils.groupByTime(mods);
 		
 		for (LinkedList<Modification> evaList : modSorted) {
 			//evaluate the parameter
@@ -62,19 +64,19 @@ public class ConflicResolverSkill extends Skill{
 						System.out.println("*********DEFAULT LIST*******************");
 						evaList.stream().forEach(m -> System.out.println(m.toString()));
 						
-						if(!mR.getAgentAttr().isEmpty()) {
+						if((mR.getAgentAttr()!="")&&!mR.getAgentAttr().isEmpty()) {
 							//filter the modification list by the agent attribute
-							newEvaList = DefaultCoordinatorFuctions.filterUsingAgentAttribute(evaList, mR.getAgentAttr(), scope);
+							newEvaList = DefaultCoordinatorFuctions.filterUsingAgentAttribute(evaList, mR.getAgentAttr(), scope, avalaibleRessource);
 						}
 						
 						if(mR.isExtra_comp()) {
 							//filter the modification list by using an extraspecific competition function
-							newEvaList = DefaultCoordinatorFuctions.extraspecificCompetition(evaList, mR.getDom_spec());
+							newEvaList = DefaultCoordinatorFuctions.extraspecificCompetition(evaList, mR.getDom_spec(),avalaibleRessource);
 						}
 						
 						if(mR.isIntra_comp()) {
 							//filter the modification list by using an intra specific competition function
-							newEvaList = DefaultCoordinatorFuctions.intraspecificCompetition(evaList,scope);
+							newEvaList = DefaultCoordinatorFuctions.intraspecificCompetition(evaList,scope,avalaibleRessource);
 						}
 						
 						if(mR.isFair_dist()) {
@@ -92,8 +94,8 @@ public class ConflicResolverSkill extends Skill{
 						System.out.println("**************SORTED LIST*****************************");
 						
 						newEvaList.stream().forEach(e->System.out.println(e.toString()));
-						
 						a.setAttribute(p, newEvaList);
+						
 					}
 					else {
 						a.setAttribute(p, evaluation);
@@ -114,7 +116,7 @@ public class ConflicResolverSkill extends Skill{
 					@arg(name = IConflictResolverSkill.FILTER_BY_ATTRIBUTE, type = IType.STRING, optional=true),
 					@arg(name = IConflictResolverSkill.INTRA_COMPETITION, type = IType.BOOL, optional = true),
 					@arg(name = IConflictResolverSkill.DOMINANT_SPEC, type = IType.SPECIES, optional = true),
-					@arg(name = IConflictResolverSkill.EXTRA_COMPETITION, type = IType.BOOL, optional = true),
+					@arg(name = IConflictResolverSkill.INTER_COMPETITION, type = IType.BOOL, optional = true),
 					@arg(name = IConflictResolverSkill.FAIR_DISTRIBUTION,type = IType.BOOL, optional = true)
 			}
 	)
@@ -130,7 +132,7 @@ public class ConflicResolverSkill extends Skill{
 		}	
 		
 		boolean intra_comp = scope.getBoolArg(IConflictResolverSkill.INTRA_COMPETITION);
-		boolean extra_comp = scope.getBoolArg(IConflictResolverSkill.EXTRA_COMPETITION);
+		boolean extra_comp = scope.getBoolArg(IConflictResolverSkill.INTER_COMPETITION);
 		boolean fair_dist = scope.getBoolArg(IConflictResolverSkill.FAIR_DISTRIBUTION);
 		ISpecies dom_spec = (ISpecies) scope.getArg(IConflictResolverSkill.DOMINANT_SPEC, IType.SPECIES);
 		
@@ -139,6 +141,7 @@ public class ConflicResolverSkill extends Skill{
 		
 		a.setAttribute(IConflictResolverSkill.MODEL_INTERACTION, list);
 	}
+	
 	
 	
 

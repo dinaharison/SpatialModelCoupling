@@ -2,7 +2,9 @@ package ummisco.gama.spatialmodelcoupling.scheduler;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import msi.gama.kernel.simulation.SimulationAgent;
 import msi.gama.kernel.simulation.SimulationClock;
@@ -15,11 +17,22 @@ import msi.gama.precompiler.GamlAnnotations.vars;
 import msi.gama.precompiler.GamlAnnotations.arg;
 import msi.gama.precompiler.IConcept;
 import msi.gama.runtime.IScope;
+import msi.gama.runtime.concurrent.GamaExecutorService;
 import msi.gama.util.GamaDate;
+import msi.gaml.operators.Cast;
 import msi.gaml.skills.Skill;
 import msi.gaml.species.ISpecies;
+import msi.gaml.statements.DoStatement;
+import msi.gaml.statements.IExecutable;
+import msi.gaml.statements.IStatement;
 import msi.gaml.types.IType;
+import ummisco.gama.spatialmodelcoupling.coordinator.ConflictResolverSkillV2;
+import ummisco.gama.spatialmodelcoupling.coordinator.CoordinatorUtils;
+import ummisco.gama.spatialmodelcoupling.coordinator.DefaultCoordinatorFuctions;
+import ummisco.gama.spatialmodelcoupling.coordinator.IConflictResolverSkill;
 import ummisco.gama.spatialmodelcoupling.model.IModele;
+import ummisco.gama.spatialmodelcoupling.types.ModelRelation;
+import ummisco.gama.spatialmodelcoupling.types.Modification;
 import ummisco.gama.spatialmodelcoupling.types.ProcessDate;
 
 
@@ -79,26 +92,27 @@ public class ScheduleSkillV2 extends Skill{
 		List<ProcessDate> executedProcesses = ScheduleTools.getExecutedSpeciesAtCurrentStep(calendar, currentTime);
 		
 		while(!executedProcesses.isEmpty()) {
+			List<IAgent> particlesScheduled = executeProcesses(scope, executedProcesses);
 			
-			executeProcesses(scope, executedProcesses);
+			
+			particlesScheduled.forEach(agt -> {
+				modifications(agt);
+			});
+			
 			calendar = ScheduleTools.nextExecutionDateCalculation(scope,calendar, executedProcesses, currentTime);
 			executedProcesses = ScheduleTools.getExecutedSpeciesAtCurrentStep(calendar, currentTime);
 			
 		}
-		
-		//execute agents in the list at the current time
-		/* executeProcesses(scope, executedProcesses);
-		
-		//next execution date calculation
-		calendar = ScheduleTools.nextExecutionDateCalculation(calendar, executedProcesses, currentTime);*/
+
 		a.setAttribute(IScheduleSkillV2.CALENDAR, new ArrayList<ProcessDate>());
 		a.setAttribute(IScheduleSkillV2.CALENDAR, calendar);
+		
 	}
 	
-	private void executeProcesses(IScope scope, List<ProcessDate> executionList) {
+	private List<IAgent> executeProcesses(IScope scope, List<ProcessDate> executionList) {
 		
 		Iterator<ProcessDate> I = executionList.iterator();
-		
+		List<IAgent> particleList = new ArrayList<>();
 		//System.out.println(executionList);
 		
 		while(I.hasNext()) {
@@ -108,7 +122,7 @@ public class ScheduleSkillV2 extends Skill{
 			//int count = 0;
 			//System.out.println("ScheduleSkillClass : date " + p.getProcess().getName() + " : "+pED);
 			
-			Iterator<IAgent> IagentList = 
+			Iterator<IAgent> IagentList =
 			(Iterator<IAgent>) spec.getPopulation(scope).getAgents(scope).iterable(scope).iterator();
 			
 			//System.out.println((ArrayList<IAgent>) spec.getPopulation(scope).getAgents(scope));
@@ -116,10 +130,17 @@ public class ScheduleSkillV2 extends Skill{
 			while(IagentList.hasNext()) {
 				IAgent a = IagentList.next();
 				a.setAttribute(IModele.EXECUTION, true);
-				a.step(scope);
-				
+				a.setAttribute(IModele.EXPLOITED_RESSOURCES, new ArrayList<>());
+				a.step(scope);				
+				particleList.add((IAgent) a.getAttribute(IModele.SPACE_PARTICLE));
+				a.setAttribute(IModele.EXECUTION, false);
 			}
 		}
+	   
+		return particleList.stream().distinct().collect(Collectors.toList());
+	}
+	
+	public void checkConflictInSpaceParticle(IScope scope) {
 		
 	}
 	
@@ -138,6 +159,96 @@ public class ScheduleSkillV2 extends Skill{
 		return s;
 	}
 	
-	
+	public static void modifications(IAgent a) {
+		List<Modification> mods = (List<Modification>)a.getAttribute(IConflictResolverSkill.MODIFICATION_LIST);
+		
+		//System.out.println(a.getName());
+		
+		LinkedList<Modification> modSortedByParameters = CoordinatorUtils.sortModificationsByParameter(mods);
+		
+		
+		while(!modSortedByParameters.isEmpty()) {
+			//get the first element
+			Modification firstMod = modSortedByParameters.getFirst();
+			String p = firstMod.getParameter();
+			//collect all modifications on the same parameter as the first item
+			
+			LinkedList<Modification> evaList = modSortedByParameters.stream().filter(
+					
+					m -> m.getParameter().equals(firstMod.getParameter())
+					
+					).collect(Collectors.toCollection(LinkedList::new));
+			
+			//apply the corresponding coordination function
+			
+			List<ModelRelation> mRL = (List<ModelRelation>) a.getAttribute(IConflictResolverSkill.MODEL_INTERACTION);
+			
+			ModelRelation mR = CoordinatorUtils.getModelInteraction(p, mRL);
+			LinkedList<Modification> newEvaList = new LinkedList<>();
+			
+			double avalaibleRessource = Cast.asFloat(a.getScope(), a.getAttribute(p));
+			
+			avalaibleRessource = CoordinatorUtils.round(avalaibleRessource, 3);
+			
+			if(avalaibleRessource>0) {
+				
+				double evaluation = CoordinatorUtils.evaluateModification(p, evaList, avalaibleRessource);
+				evaluation = CoordinatorUtils.round(evaluation, 3);
+				if(evaluation<0) {
+					
+					if((mR.getAgentAttr()!="")&&!mR.getAgentAttr().isEmpty()) {
+						//filter the modification list by the agent attribute
+						newEvaList = DefaultCoordinatorFuctions.filterUsingAgentAttribute(evaList, mR.getAgentAttr(), a.getScope(), avalaibleRessource);
+						//System.out.println("Protocol : Attribute Filter : " + mR.getAgentAttr());
+					}
+					
+					if(mR.isExtra_comp()) {
+						//filter the modification list by using an extraspecific competition function
+						newEvaList = DefaultCoordinatorFuctions.extraspecificCompetition(evaList, mR.getDom_spec(),avalaibleRessource);
+						//System.out.println("Protocol : Interspecific Competition");
+					}
+					
+					if(mR.isIntra_comp()) {
+						//filter the modification list by using an intra specific competition function
+						newEvaList = DefaultCoordinatorFuctions.intraspecificCompetition(evaList,a.getScope(),avalaibleRessource);
+						//System.out.println("Protocol : intraspecific Competition");
+					}
+					
+					if(mR.isFair_dist()) {
+						//change the value of the modification so the ressource consumption is fair among agents
+						newEvaList = DefaultCoordinatorFuctions.fairModification(evaList, avalaibleRessource);
+						//System.out.println("Protocol : Even Distribution");
+					}
+					
+					if(!newEvaList.isEmpty()) {
+						for (Modification mod : newEvaList) {
+							avalaibleRessource = avalaibleRessource + mod.value;
+						}
+					
+						a.setAttribute(p, avalaibleRessource);
+					}else {
+						a.setAttribute(p, CoordinatorUtils.noRessource(p, evaList, avalaibleRessource));						
+					}
+					
+				}
+				else {		
+					evaList.forEach(m -> m.addModificationToAgent(m.agent));					
+					a.setAttribute(p, evaluation);
+				}
+			}else if(avalaibleRessource==0) {
+				a.setAttribute(p, CoordinatorUtils.noRessource(p, evaList, avalaibleRessource));
+			}
+			
+			//write file here
+			
+			
+			//delete the curent evaluation list from the sorted modificaiton list
+			for (Modification modification : evaList) {
+				modSortedByParameters.remove(modification);
+			}
+			
+		}
+		a.setAttribute(IConflictResolverSkill.MODIFICATION_LIST, new LinkedList<>());
+	}
 	
 }
