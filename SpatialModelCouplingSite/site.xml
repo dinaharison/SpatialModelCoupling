@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/ummisco.gama.feature.spatialmodelcoupling_1.0.0.202107280912.jar" id="ummisco.gama.feature.spatialmodelcoupling" version="1.0.0.202107280912"/>
+</site>
